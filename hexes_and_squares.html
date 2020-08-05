@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!--svg width="210mm" height="297mm" viewBox="0 0 210 297"-->
+    <svg width="8.25in" height="11.75in" viewBox="0 0 8.25 11.75">
+      <g class="hexes"></g>
+    </svg>
+
+    <script>
+
+      var c = function(parent, tagName, attributes) {
+        var e = document.createElementNS('http://www.w3.org/2000/svg', tagName);
+        for (var k in attributes) e.setAttribute(k, attributes[k]);
+        if (parent) parent.appendChild(e);
+        return e;
+      };
+      var h = function(sel) {
+        return document.querySelector(sel);
+      };
+
+      var hexes = h('svg g.hexes');
+
+      var s = 'lightgrey';
+      var f = 'white';
+      var sw = '0.009';
+        //
+      var t = 1 / Math.sqrt(3);
+      var t2 = t / 2;
+      var ps = [];
+      //ps.push([ 0, 0 ]);
+      ps.push([ t2, -0.5 ]);
+      ps.push([ t, 0 ]);
+      ps.push([ t2, 0.5 ]);
+      ps.push([ -t2, 0.5 ]);
+      ps.push([ -t, 0 ]);
+      ps.push([ -t2, -0.5 ]);
+      ps = ps.map(function(p) { return '' + p[0] + ',' + p[1]; }).join(' ');
+
+      var makeHex = function(x, y) {
+
+        return c(
+          hexes,
+          'polygon',
+          { stroke: s, fill: f, "stroke-width": sw,
+            "stroke-dasharray": '0.03,0.09',
+            points: ps,
+            transform: 'translate(' + x + ', ' + y + ')' });
+      };
+
+      for (var y = 0; y < 13; y++) {
+        for (var x = 0; x < 6; x++) {
+          makeHex(x * (3 * t), y);
+          makeHex(x * (3 * t) + t + t2, y + 0.5);
+        }
+      }
+
+      var makeCross = function(x, y) {
+
+        var f = 0.05;
+
+        c(hexes, 'line', {
+          x1: 0, y1: -f, x2: 0, y2: f,
+          style: 'stroke:grey;stroke-width:0.01',
+          transform: 'translate(' + x + ', ' + y + ')' });
+        c(hexes, 'line', {
+          x1: -f, y1: 0, x2: f, y2: 0,
+          style: 'stroke:grey;stroke-width:0.01',
+          transform: 'translate(' + x + ', ' + y + ')' });
+      };
+
+      for (var y = 0; y < 13; y++) {
+        for (var x = 0; x < 9; x++) {
+          makeCross(x, y);
+        }
+      }
+    </script>
+  </body>
+</html>
+
