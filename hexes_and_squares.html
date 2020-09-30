@@ -10,9 +10,11 @@
   <body>
 
     <!--
-    <svg width="8.25in" height="11.75in" viewBox="0 0 8.25 11.75">
-    -->
     <svg width="11.75in" height="8.25in" viewBox="0 0 11.75 8.25 ">
+    <svg width="8.25in" height="11.75in" viewBox="0 0 8.25 11.75">
+      // set below under `var dim = ...`
+    -->
+    <svg>
       <g class="hexes"></g>
     </svg>
 
@@ -30,9 +32,30 @@
 
       var hexes = h('svg g.hexes');
 
-      var s = 'lightgrey';
-      var f = 'white';
-      var sw = '0.009';
+      //var dim = { width: "11.75in", height: "8.25in" }; // A4 landscape
+      var dim = { width: "8.25in", height: "11.75in" }; // A4 portrait
+
+      var hs = 'lightgrey';  // hex stroke
+      var cs = 'grey';       // cross stroke
+      //var hs = 'darkgreen';  // hex stroke
+      //var cs = 'darkgreen';  // cross stroke
+
+      var hf = 'white'; // hex fill
+      //var hf = 'green'; // hex fill
+
+      var hsda = '0.03,0.09'; // hdex stroke-dasharray
+      var hsw = '0.009'; // hex stroke width
+      var csw = '0.01'; // cross stroke width
+
+      var svg = h('svg');
+      var rep = function(s) { return s.replace(/[a-z]+/, ''); }
+        //
+      svg.setAttribute(
+        'width', dim.width);
+      svg.setAttribute(
+        'height', dim.height);
+      svg.setAttribute(
+        'viewBox', '0 0 ' + rep(dim.width) + ' ' + rep(dim.height));
 
       //var t = 1 / Math.sqrt(3); // 0.5773502691896258
       //var t = 0.5; // ;-)
@@ -54,8 +77,8 @@
         return c(
           hexes,
           'polygon',
-          { stroke: s, fill: f, "stroke-width": sw,
-            "stroke-dasharray": '0.03,0.09',
+          { stroke: hs, fill: hf, "stroke-width": hsw,
+            "stroke-dasharray": hsda,
             points: ps,
             transform: 'translate(' + x + ', ' + y + ')' });
       };
@@ -73,11 +96,11 @@
 
         c(hexes, 'line', {
           x1: 0, y1: -f, x2: 0, y2: f,
-          style: 'stroke:grey;stroke-width:0.01',
+          style: 'stroke:' + cs + ';stroke-width:' + csw,
           transform: 'translate(' + x + ', ' + y + ')' });
         c(hexes, 'line', {
           x1: -f, y1: 0, x2: f, y2: 0,
-          style: 'stroke:grey;stroke-width:0.01',
+          style: 'stroke:' + cs + ';stroke-width:' + csw,
           transform: 'translate(' + x + ', ' + y + ')' });
       };
 
