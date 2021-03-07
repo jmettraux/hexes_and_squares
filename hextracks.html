@@ -106,29 +106,6 @@
         return makeHex(x, y, 'rotate(90) ' + (trans || ''));
       };
 
-      var grid = function(x, y, w, h) {
-
-        var mx = x + w;
-        var my = y + h;
-
-        var a = [];
-        for (var yy = y; yy < my; yy++) {
-          for (var xx = x; xx < mx; xx++) {
-//console.log([ xx, yy ]);
-            a.push([ xx, yy ]);
-          }
-        }
-        return a;
-      };
-
-      for (var y = 0; y < 1; y++) {
-        for (var x = 0; x < 3; x++) {
-          makeHex(x * t3, y);
-          makeHex(x * t3 + t + t2, y + 0.5);
-        }
-      }
-//console.log(grid(0, 4, 1, 3));
-
       class Point {
 
         constructor(x, y) { this.x = x; this.y = y; }
@@ -137,6 +114,11 @@
         get south() { return new Point(this.x + 0, this.y + 1); }
         get east() { return new Point(this.x + 1, this.y + 0); }
         get west() { return new Point(this.x - 1, this.y + 0); }
+
+        get n2() { return new Point(this.x + 0, this.y - 0.5); }
+        get s2() { return new Point(this.x + 0, this.y + 0.5); }
+        get e2() { return new Point(this.x + 0.5, this.y + 0); }
+        get w2() { return new Point(this.x - 0.5, this.y + 0); }
 
         get ne() { return new Point(this.x + 1.5 * t, this.y - 0.5); }
         get se() { return new Point(this.x + 1.5 * t, this.y + 0.5); }
@@ -147,45 +129,44 @@
         get se2() { return new Point(this.x + 0.5, this.y + 1.5 * t); }
         get nw2() { return new Point(this.x - 0.5, this.y - 1.5 * t); }
         get sw2() { return new Point(this.x - 0.5, this.y + 1.5 * t); }
+
+        makeHex() { return makeHex(this.x, this.y); }
+        makeHex2() { return makeHex2(this.x, this.y); }
+        drawHex() { this.makeHex(); return this; }
+        drawHex2() { this.makeHex2(); return this; }
       }
 
-      //c(hexes, 'line', {
-      //  x1: 0, y1: 0, x2: 1, y2: 1, stroke: 'black',
-      //  "stroke-width": 0.05 });
-      c(hexes, 'line', {
-        x1: 0, y1: 0, x2: t + t2, y2: 0.5, stroke: 'black',
-        "stroke-width": 0.05 });
-
-      grid(0, 2, 4, 1).forEach(function(xy) {
-        var x = xy[0]; var y = xy[1];
-        makeHex2(x * t3, y);
-        makeHex2(x * t3 + 0.5, y + t + t2);
-      });
-      c(hexes, 'line', {
-        x1: 0, y1: 2 + 0, x2: 0.5, y2: 2 + t + t2, stroke: 'black',
-        "stroke-width": 0.05 });
+      (new Point(0, 3)).drawHex2()
+        .ne.drawHex2()
+        .ne.drawHex2()
+        .ne.drawHex2()
+        .se.drawHex2()
+        .se.drawHex2()
+        .se.drawHex2();
 
       var p = new Point(0, 6);
       for (var x = 0; x < 10; x++) {
         p = (x % 2 === 1) ? p.se : p.ne;
-        makeHex(p.x, p.y);
+        //makeHex(p.x, p.y);
+        p.drawHex();
       }
 
       p = new Point(0, 8);
       for (var x = 0; x < 10; x++) {
         p = (x % 2 === 1) ? p.se : p.ne;
-        makeHex2(p.x, p.y);
+        p.drawHex2();
+        //makeHex2(p.x, p.y);
       }
       p = new Point(0, 9);
       for (var x = 0; x < 10; x++) {
         p = (x % 2 === 1) ? p.se : p.ne;
-        makeHex2(p.x, p.y);
+        p.drawHex2();
       }
 
       p = new Point(0, 11);
       for (var x = 0; x < 10; x++) {
         p = (x % 2 === 1) ? p.se2 : p.ne2;
-        makeHex2(p.x, p.y);
+        p.drawHex2();
       }
     </script>
   </body>
