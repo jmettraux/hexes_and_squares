@@ -7,6 +7,10 @@
         margin: 0;
       }
       */
+      .hex-text {
+        font-size: 0.28pt;
+        fill: lightgrey;
+      }
     </style>
   </head>
   <body>
@@ -32,12 +36,18 @@
 
       var clog = console.log;
 
-      var c = function(parent, tagName, attributes) {
+      var c = function(parent, tagName, attributes, text) {
         var e = document.createElementNS('http://www.w3.org/2000/svg', tagName);
         for (var k in attributes) e.setAttribute(k, attributes[k]);
         if (parent) parent.appendChild(e);
+        if (text) e.textContent = text;
         return e;
       };
+
+      var ct = function(parent, attributes, text) {
+        return c(parent, 'text', attributes, text);
+      };
+
       var h = function(sel) {
         return document.querySelector(sel);
       };
@@ -130,10 +140,19 @@
         get nw2() { return new Point(this.x - 0.5, this.y - 1.5 * t); }
         get sw2() { return new Point(this.x - 0.5, this.y + 1.5 * t); }
 
+        drift(x, y) { return new Point(this.x + x, this.y + y); }
+
+        log() { clog([ 'Point', 'log', this.x, this.y ]); return this; }
+
         makeHex() { return makeHex(this.x, this.y); }
         makeHex2() { return makeHex2(this.x, this.y); }
         drawHex() { this.makeHex(); return this; }
         drawHex2() { this.makeHex2(); return this; }
+
+        text(s) {
+          ct(hexes, { x: this.x, y: this.y, class: 'hex-text' }, s);
+          return this;
+        }
       }
 
       (new Point(0, 3)).drawHex2()
@@ -144,30 +163,34 @@
         .se.drawHex2()
         .se.drawHex2();
 
-      var p = new Point(0, 6);
-      for (var x = 0; x < 10; x++) {
-        p = (x % 2 === 1) ? p.se : p.ne;
-        //makeHex(p.x, p.y);
-        p.drawHex();
-      }
+      var cx = 2.598; var cy = 5;
 
-      p = new Point(0, 8);
-      for (var x = 0; x < 10; x++) {
-        p = (x % 2 === 1) ? p.se : p.ne;
-        p.drawHex2();
-        //makeHex2(p.x, p.y);
-      }
-      p = new Point(0, 9);
-      for (var x = 0; x < 10; x++) {
-        p = (x % 2 === 1) ? p.se : p.ne;
-        p.drawHex2();
-      }
+      [ 0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360 ]
+        .forEach(function(angle) {
+          var a = Math.PI * (angle - 90) / 180;
+          var r = t * 3;
+          var x =  r * Math.cos(a);
+          var y =  r * Math.sin(a);
+          makeHex2(cx + x, cy + y);
+          ct(
+            hexes,
+            { x: cx + x - t2, y: cy + y, class: 'hex-text' },
+            '' + (angle / 30));
+        });
+      makeHex2(cx, cy + t * 0.8);
+      ct(hexes,
+        { x: cx, y: cy + t * 0.8, class: 'hex-text' }, '\u263E');
+      makeHex(cx, cy - t * 0.9);
+      ct(hexes,
+        { x: cx, y: cy - t * 0.9, class: 'hex-text' }, '\u263C');
 
-      p = new Point(0, 11);
-      for (var x = 0; x < 10; x++) {
-        p = (x % 2 === 1) ? p.se2 : p.ne2;
-        p.drawHex2();
-      }
+      (new Point(0, 7)).drawHex2()
+        .se.drawHex2()
+        .se.drawHex2()
+        .se.drawHex2()
+        .ne.drawHex2()
+        .ne.drawHex2()
+        .ne.drawHex2();
     </script>
   </body>
 </html>
